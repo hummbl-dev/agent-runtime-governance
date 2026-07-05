@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "v0.1",
+  "packetStatus": "candidate",
+  "governanceManifest": {
+    "id": "arg.fixture.invalid-v0.1",
+    "title": "Invalid Agent Runtime Governance Packet Fixture",
+    "version": "0.1.0",
+    "scope": "Fixture: missing required governanceContract field. Must fail validation."
+  },
+  "authority": {
+    "grantedBy": "fixture/reviewer",
+    "basis": "Fixture authority claim. Not real."
+  },
+  "receiptRequirements": {
+    "fields": [
+      "packetId",
+      "reviewer",
+      "decision"
+    ],
+    "signedBy": "fixture/reviewer"
+  }
+}

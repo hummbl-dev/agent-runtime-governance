@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "v0.1",
+  "packetStatus": "candidate",
+  "governanceManifest": {
+    "id": "arg.fixture.valid-v0.1",
+    "title": "Valid Agent Runtime Governance Packet Fixture",
+    "version": "0.1.0",
+    "scope": "Fixture: a minimally valid v0.1 governance packet."
+  },
+  "authority": {
+    "grantedBy": "fixture/reviewer",
+    "basis": "Fixture authority claim. Not real."
+  },
+  "governanceContract": {
+    "policyEngine": {
+      "kind": "declarative",
+      "ref": "fixtures/valid/governance-packet-v0.1.valid.json#guardrailSpecs"
+    },
+    "enforcementPoints": [
+      {
+        "name": "admission",
+        "stage": "pre-action",
+        "failMode": "fail-closed"
+      }
+    ],
+    "guardrailSpecs": [
+      {
+        "id": "deny-unsafe",
+        "description": "Deny unsafe actions.",
+        "effect": "deny"
+      }
+    ],
+    "killSwitchPolicy": {
+      "triggers": [
+        {
+          "description": "Unsafe action detected.",
+          "authorizedBy": "fixture/on-call"
+        }
+      ],
+      "effect": "halt"
+    },
+    "circuitBreakerPolicy": {
+      "threshold": {
+        "metric": "errorCount",
+        "limit": 10
+      },
+      "effect": "open"
+    },
+    "auditRequirements": {
+      "recorded": [
+        "packetId",
+        "decision",
+        "timestamp"
+      ],
+      "retention": "30d"
+    }
+  },
+  "receiptRequirements": {
+    "fields": [
+      "packetId",
+      "reviewer",
+      "decision"
+    ],
+    "signedBy": "fixture/reviewer"
+  }
+}
