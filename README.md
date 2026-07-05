@@ -1,6 +1,6 @@
 # Agent Runtime Governance
 
-$(System.Collections.Hashtable.Name) is a public seed repository for runtime governance for agents.
+Agent Runtime Governance is a public seed repository for runtime governance for agents.
 
 ## Purpose
 
