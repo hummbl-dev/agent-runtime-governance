@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hummbl-dev/agent-runtime-governance/schemas/agent-runtime-governance-v0.1.json",
+  "title": "Agent Runtime Governance Packet v0.1",
+  "description": "Candidate schema for a runtime governance packet for agents. Non-canon. Exploratory.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "packetStatus",
+    "governanceManifest",
+    "authority",
+    "governanceContract",
+    "receiptRequirements"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "v0.1",
+      "description": "Schema version this packet conforms to."
+    },
+    "packetStatus": {
+      "type": "string",
+      "enum": ["candidate", "adopted", "deprecated"],
+      "description": "Lifecycle status of the packet. v0.1 packets should default to candidate."
+    },
+    "governanceManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "version", "scope"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable identifier for the packet."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable title."
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Packet version (semver-ish string)."
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Short description of what the packet governs."
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grantedBy", "basis"],
+      "properties": {
+        "grantedBy": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Who or what grants authority for this packet."
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The basis for the claimed authority. v0.1 only records the claim; it does not verify it."
+        }
+      }
+    },
+    "governanceContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policyEngine",
+        "enforcementPoints",
+        "guardrailSpecs",
+        "killSwitchPolicy",
+        "circuitBreakerPolicy",
+        "auditRequirements"
+      ],
+      "properties": {
+        "policyEngine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "ref"],
+          "properties": {
+            "kind": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Kind of policy engine or evaluation approach (e.g. opa, cedar, declarative, external)."
+            },
+            "ref": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Reference to the policy engine or policy source."
+            }
+          }
+        },
+        "enforcementPoints": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "stage", "failMode"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "stage": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Where in the runtime path enforcement occurs (e.g. admission, pre-action, post-action)."
+              },
+              "failMode": {
+                "type": "string",
+                "enum": ["fail-closed", "fail-open"],
+                "description": "Behavior when the policy engine cannot evaluate successfully."
+              }
+            }
+          }
+        },
+        "guardrailSpecs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "description", "effect"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "effect": {
+                "type": "string",
+                "enum": ["deny", "allow", "warn", "audit"],
+                "description": "Effect applied when the guardrail matches."
+              }
+            }
+          }
+        },
+        "killSwitchPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["triggers", "effect"],
+          "properties": {
+            "triggers": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["description"],
+                "properties": {
+                  "description": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Condition under which the kill switch may be triggered."
+                  },
+                  "authorizedBy": {
+                    "type": "string",
+                    "description": "Who is authorized to trigger the kill switch for this condition."
+                  }
+                }
+              }
+            },
+            "effect": {
+              "type": "string",
+              "enum": ["halt", "quarantine", "disable"],
+              "description": "Effect of triggering the kill switch."
+            }
+          }
+        },
+        "circuitBreakerPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["threshold", "effect"],
+          "properties": {
+            "threshold": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["metric", "limit"],
+              "properties": {
+                "metric": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Metric watched by the breaker (e.g. failureRate, errorCount)."
+                },
+                "limit": {
+                  "type": "number",
+                  "description": "Threshold value at which the breaker opens."
+                }
+              }
+            },
+            "effect": {
+              "type": "string",
+              "enum": ["open", "closed", "half-open"],
+              "description": "State the breaker transitions to when the threshold is exceeded."
+            }
+          }
+        },
+        "auditRequirements": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["recorded", "retention"],
+          "properties": {
+            "recorded": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Fields that must be recorded in the audit trail."
+              }
+            },
+            "retention": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Retention expectation for the audit trail (e.g. 90d, indefinite)."
+            }
+          }
+        }
+      }
+    },
+    "receiptRequirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fields", "signedBy"],
+      "properties": {
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Fields a receipt for this packet must contain."
+          }
+        },
+        "signedBy": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Who or what must sign or attest the receipt. v0.1 records the claim only."
+        }
+      }
+    }
+  }
+}

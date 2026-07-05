@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "v0.1",
+  "packetStatus": "candidate",
+  "governanceManifest": {
+    "id": "arg.example.minimal-v0.1",
+    "title": "Minimal Agent Runtime Governance Packet (Example)",
+    "version": "0.1.0",
+    "scope": "Example governance packet for a single agent performing read-only research actions."
+  },
+  "authority": {
+    "grantedBy": "example-org/governance-reviewers",
+    "basis": "Reviewed candidate packet. Not adopted. Authority is claimed for example purposes only."
+  },
+  "governanceContract": {
+    "policyEngine": {
+      "kind": "declarative",
+      "ref": "examples/governance-packet-v0.1.example.json#guardrailSpecs"
+    },
+    "enforcementPoints": [
+      {
+        "name": "pre-action",
+        "stage": "pre-action",
+        "failMode": "fail-closed"
+      }
+    ],
+    "guardrailSpecs": [
+      {
+        "id": "deny-destructive-actions",
+        "description": "Deny any action that mutates external state.",
+        "effect": "deny"
+      },
+      {
+        "id": "warn-high-cost-actions",
+        "description": "Warn on actions estimated to exceed a cost threshold.",
+        "effect": "warn"
+      }
+    ],
+    "killSwitchPolicy": {
+      "triggers": [
+        {
+          "description": "Agent attempts a denied destructive action.",
+          "authorizedBy": "example-org/on-call"
+        }
+      ],
+      "effect": "halt"
+    },
+    "circuitBreakerPolicy": {
+      "threshold": {
+        "metric": "failureRate",
+        "limit": 0.5
+      },
+      "effect": "open"
+    },
+    "auditRequirements": {
+      "recorded": [
+        "packetId",
+        "action",
+        "decision",
+        "enforcementPoint",
+        "timestamp"
+      ],
+      "retention": "90d"
+    }
+  },
+  "receiptRequirements": {
+    "fields": [
+      "packetId",
+      "packetVersion",
+      "reviewer",
+      "reviewedAt",
+      "decision"
+    ],
+    "signedBy": "example-org/governance-reviewers"
+  }
+}
