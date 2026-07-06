@@ -28,3 +28,26 @@ Early public seed repository. Candidate namespace only.
 ## Boundary
 
 All content is exploratory unless later adopted through a reviewed governance path.
+
+## Glossary
+
+These definitions are practical orientation notes for this candidate repository. They do not create canon.
+
+| Term | Working Definition |
+| --- | --- |
+| Kill switch | A control that stops an agent, workflow, or runtime path when continued execution would be unsafe or unauthorized. |
+| Circuit breaker | A guard that temporarily interrupts a repeated action after a threshold is crossed, such as too many failures, retries, or policy denials. |
+| Guardrail | A bounded rule, check, or constraint that keeps execution inside an approved operating envelope. |
+| Admission control | A pre-execution decision that determines whether a task, tool call, runtime, or artifact is allowed to enter a governed workflow. |
+| Fail-closed | A failure posture where missing authority, missing evidence, or validation errors block the action. |
+| Fail-open | A failure posture where the action continues despite missing authority, missing evidence, or validation errors. |
+| Policy enforcement point | The place where a policy is actually checked and applied, such as a CLI wrapper, workflow gate, API middleware, or runtime supervisor. |
+
+For contribution posture, use the shared [HUMMBL contribution guidance](https://github.com/hummbl-dev/.github/blob/main/CONTRIBUTING.md).
+
+## Receipt
+
+- Added a README glossary for common runtime-governance terms.
+- Linked to shared contribution guidance.
+- Kept the definitions exploratory and non-canonical.
+- Did not modify operator-authority surfaces.
