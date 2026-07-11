@@ -1,0 +1,71 @@
+{
+  "schema_version": "long_horizon_work_session.v0.1",
+  "session_id": "lhws-degraded-app-unavailable",
+  "initiating_authority": "human-operator",
+  "authorized_objective": "Generate weekly summary from connected calendar",
+  "current_state": "degraded",
+  "state_history": [
+    {"state": "proposed", "timestamp": "2026-07-15T09:00:00Z", "reason": "initiated"},
+    {"state": "running", "timestamp": "2026-07-15T09:01:00Z", "reason": "started"},
+    {"state": "degraded", "timestamp": "2026-07-15T09:10:00Z", "reason": "calendar connector unavailable"}
+  ],
+  "capability_declaration": {
+    "available_apps": ["calendar", "web_search"],
+    "browser_access": "scoped",
+    "local_file_access": "read_only",
+    "computer_use_access": "denied",
+    "network_policy": "allowlist",
+    "schedule_event_trigger_support": false,
+    "artifact_types": ["summary"],
+    "credential_posture": "prohibited",
+    "data_retention_locality": "session-only",
+    "max_duration_seconds": 1800,
+    "max_cost_usd": 0.50,
+    "max_concurrency": 2,
+    "actions_requiring_human_confirmation": ["publish"],
+    "unavailable_capabilities": ["calendar_connector"]
+  },
+  "approval_policy": {
+    "read_gate": "auto",
+    "mutation_gate": "auto",
+    "message_gate": "confirm",
+    "schedule_gate": "confirm",
+    "browser_gate": "auto",
+    "desktop_gate": "deny",
+    "publish_gate": "confirm",
+    "destructive_gate": "deny"
+  },
+  "route_ladder": {
+    "preferred_order": ["structured_api", "browser_automation", "human_action"],
+    "route_selection_receipted": true,
+    "last_route_selected": "browser_automation",
+    "last_route_reason": "calendar API unavailable, falling back to browser calendar access"
+  },
+  "checkpoint_policy": {
+    "checkpoint_enabled": true,
+    "checkpoint_interval_seconds": 300,
+    "resume_supported": true,
+    "stale_detection": true,
+    "stale_timeout_seconds": 600,
+    "overlap_prevention": true,
+    "idempotency_protection": true,
+    "cancellation_propagation": "graceful",
+    "steering_supported": true
+  },
+  "receipt_requirements": {
+    "session_identity_logged": true,
+    "capabilities_logged": true,
+    "plan_logged": true,
+    "source_accesses_logged": true,
+    "subtask_delegations_logged": true,
+    "mutations_logged": true,
+    "artifact_locations_logged": true,
+    "browser_computer_use_logged": true,
+    "checkpoints_logged": true,
+    "user_steering_logged": true,
+    "cost_resource_usage_logged": true,
+    "failures_logged": true,
+    "rollback_logged": true,
+    "final_claim_posture_logged": true
+  }
+}

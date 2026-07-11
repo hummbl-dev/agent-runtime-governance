@@ -1,0 +1,64 @@
+{
+  "schema_version": "long_horizon_work_session.v0.1",
+  "session_id": "lhws-bad-premature-computer-use",
+  "initiating_authority": "human-operator",
+  "authorized_objective": "Read spreadsheet data",
+  "current_state": "browser_or_computer_use_running",
+  "capability_declaration": {
+    "available_apps": ["sheets_api"],
+    "browser_access": "scoped",
+    "local_file_access": "read_only",
+    "computer_use_access": "scoped",
+    "network_policy": "allowlist",
+    "schedule_event_trigger_support": false,
+    "artifact_types": ["data_extract"],
+    "credential_posture": "prohibited",
+    "data_retention_locality": "session-only",
+    "max_duration_seconds": 600,
+    "max_cost_usd": 0.10,
+    "max_concurrency": 1,
+    "actions_requiring_human_confirmation": [],
+    "unavailable_capabilities": []
+  },
+  "approval_policy": {
+    "read_gate": "auto",
+    "mutation_gate": "deny",
+    "message_gate": "deny",
+    "schedule_gate": "deny",
+    "browser_gate": "auto",
+    "desktop_gate": "auto",
+    "publish_gate": "deny",
+    "destructive_gate": "deny"
+  },
+  "route_ladder": {
+    "preferred_order": ["computer_use", "browser_automation", "structured_api"],
+    "route_selection_receipted": false,
+    "last_route_selected": "computer_use",
+    "last_route_reason": "preferred visual approach"
+  },
+  "checkpoint_policy": {
+    "checkpoint_enabled": true,
+    "resume_supported": true,
+    "stale_detection": true,
+    "overlap_prevention": true,
+    "idempotency_protection": true,
+    "cancellation_propagation": "immediate",
+    "steering_supported": true
+  },
+  "receipt_requirements": {
+    "session_identity_logged": true,
+    "capabilities_logged": true,
+    "plan_logged": true,
+    "source_accesses_logged": true,
+    "subtask_delegations_logged": true,
+    "mutations_logged": true,
+    "artifact_locations_logged": true,
+    "browser_computer_use_logged": true,
+    "checkpoints_logged": true,
+    "user_steering_logged": true,
+    "cost_resource_usage_logged": true,
+    "failures_logged": true,
+    "rollback_logged": true,
+    "final_claim_posture_logged": true
+  }
+}

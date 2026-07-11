@@ -1,0 +1,66 @@
+{
+  "schema_version": "long_horizon_work_session.v0.1",
+  "session_id": "lhws-bad-overlap",
+  "initiating_authority": "human-operator",
+  "authorized_objective": "scheduled daily report",
+  "current_state": "running",
+  "capability_declaration": {
+    "available_apps": ["web_search"],
+    "browser_access": "scoped",
+    "local_file_access": "read_write_scoped",
+    "computer_use_access": "denied",
+    "network_policy": "allowlist",
+    "schedule_event_trigger_support": true,
+    "artifact_types": ["report"],
+    "credential_posture": "prohibited",
+    "data_retention_locality": "session-only",
+    "max_duration_seconds": 3600,
+    "max_cost_usd": 1.00,
+    "max_concurrency": 1,
+    "actions_requiring_human_confirmation": ["publish"],
+    "unavailable_capabilities": []
+  },
+  "approval_policy": {
+    "read_gate": "auto",
+    "mutation_gate": "auto",
+    "message_gate": "confirm",
+    "schedule_gate": "confirm",
+    "browser_gate": "auto",
+    "desktop_gate": "deny",
+    "publish_gate": "confirm",
+    "destructive_gate": "deny"
+  },
+  "route_ladder": {
+    "preferred_order": ["structured_api", "browser_automation", "human_action"],
+    "route_selection_receipted": true,
+    "last_route_selected": "structured_api",
+    "last_route_reason": "API available"
+  },
+  "checkpoint_policy": {
+    "checkpoint_enabled": true,
+    "checkpoint_interval_seconds": 600,
+    "resume_supported": true,
+    "stale_detection": true,
+    "stale_timeout_seconds": 1800,
+    "overlap_prevention": false,
+    "idempotency_protection": false,
+    "cancellation_propagation": "graceful",
+    "steering_supported": true
+  },
+  "receipt_requirements": {
+    "session_identity_logged": true,
+    "capabilities_logged": true,
+    "plan_logged": true,
+    "source_accesses_logged": true,
+    "subtask_delegations_logged": true,
+    "mutations_logged": true,
+    "artifact_locations_logged": true,
+    "browser_computer_use_logged": true,
+    "checkpoints_logged": true,
+    "user_steering_logged": true,
+    "cost_resource_usage_logged": true,
+    "failures_logged": true,
+    "rollback_logged": true,
+    "final_claim_posture_logged": true
+  }
+}
