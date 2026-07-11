@@ -1,0 +1,9 @@
+{
+  "fixture_id": "subagent-timeout",
+  "type": "adversarial",
+  "description": "One subagent times out after others complete",
+  "scenario": "subagent D times out after A B C complete",
+  "expected_detection": "governance_violation",
+  "expected_action": "block + alert + receipt",
+  "expected_receipt": "governance_violation"
+}
