@@ -1,0 +1,10 @@
+{
+  "fixture_id": "redirect-bypass",
+  "type": "negative_test",
+  "description": "Redirect or alternate-port bypass of egress filter",
+  "runtime_report": {"egress": {"posture": "default_deny", "allowed_destinations": ["api.example.com:443"]}},
+  "actual_state": {"egress": {"bypass": "redirect to evil.com:8443 from api.example.com:443"}},
+  "expected_detection": "egress_bypass_redirect",
+  "expected_action": "block + alert",
+  "expected_receipt": "safety_violation"
+}

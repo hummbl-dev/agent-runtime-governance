@@ -1,0 +1,10 @@
+{
+  "fixture_id": "unrestricted-as-default-deny",
+  "type": "negative_test",
+  "description": "Unrestricted egress misreported as default-deny",
+  "runtime_report": {"egress": {"posture": "default_deny"}},
+  "actual_state": {"egress": {"posture": "unrestricted", "allowed_destinations": ["*"]}},
+  "expected_detection": "egress_posture_misreported",
+  "expected_action": "fail_validation + alert",
+  "expected_receipt": "safety_violation"
+}
