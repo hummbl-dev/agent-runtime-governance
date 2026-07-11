@@ -1,0 +1,293 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hummbl.dev/schemas/agent-constitution/v0.1/constitution.schema.json",
+  "title": "Bounded Agent-Only Constitution v0.1",
+  "description": "Machine-readable constitution for agent collectives operating without continuous human interaction",
+  "type": "object",
+  "required": [
+    "constitution_id",
+    "version",
+    "root_principal",
+    "mission",
+    "scope",
+    "authority",
+    "epistemic_governance",
+    "action_governance",
+    "lifecycle",
+    "accountability",
+    "prohibited_behaviors",
+    "sandbox_boundary"
+  ],
+  "properties": {
+    "constitution_id": {
+      "type": "string",
+      "description": "Unique identifier for this constitution"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "root_principal": {
+      "type": "object",
+      "required": ["principal_id", "principal_type", "authority_level"],
+      "properties": {
+        "principal_id": {"type": "string"},
+        "principal_type": {"enum": ["human", "organization"]},
+        "authority_level": {"enum": ["root", "delegated"]},
+        "contact": {"type": "string"}
+      }
+    },
+    "mission": {
+      "type": "object",
+      "required": ["bounded_mission", "permitted_environment", "non_goals", "stakes", "start_condition", "expiry_condition", "revalidation_condition"],
+      "properties": {
+        "bounded_mission": {"type": "string"},
+        "permitted_environment": {"type": "array", "items": {"type": "string"}},
+        "non_goals": {"type": "array", "items": {"type": "string"}},
+        "stakes": {"enum": ["low", "medium", "high", "critical"]},
+        "start_condition": {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {"enum": ["operator_approval", "time", "event"]},
+            "artifact": {"type": "string"},
+            "deadline": {"type": "string", "format": "date-time"}
+          }
+        },
+        "expiry_condition": {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {"enum": ["time", "event", "manual"]},
+            "deadline": {"type": "string", "format": "date-time"}
+          }
+        },
+        "revalidation_condition": {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {"enum": ["periodic", "on_demand", "manual"]},
+            "interval": {"type": "string"}
+          }
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["permitted_tools", "permitted_actions"],
+      "properties": {
+        "permitted_tools": {"type": "array", "items": {"type": "string"}},
+        "permitted_actions": {"type": "array", "items": {"type": "string"}},
+        "prohibited_tools": {"type": "array", "items": {"type": "string"}},
+        "prohibited_actions": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "required": ["delegation_depth_limit", "subagent_count_limit", "delegation_tokens"],
+      "properties": {
+        "delegation_depth_limit": {"type": "integer", "minimum": 0},
+        "subagent_count_limit": {"type": "integer", "minimum": 0},
+        "delegation_tokens": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["delegated_by", "delegated_to", "scope", "limits", "expiry", "revocable"],
+            "properties": {
+              "delegated_by": {"type": "string"},
+              "delegated_to": {"type": "string"},
+              "scope": {"type": "string"},
+              "limits": {"type": "object"},
+              "expiry": {"type": "string", "format": "date-time"},
+              "revocable": {"type": "boolean"}
+            }
+          }
+        },
+        "prohibited_delegation_paths": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "emergency_authority": {
+          "type": "object",
+          "required": ["holder", "mechanism"],
+          "properties": {
+            "holder": {"type": "string"},
+            "mechanism": {"enum": ["kill_switch", "manual", "automated"]}
+          }
+        }
+      }
+    },
+    "epistemic_governance": {
+      "type": "object",
+      "required": ["roles", "evidence_requirements", "independence_lineage", "dissent_requirements"],
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["agent_id", "role"],
+            "properties": {
+              "agent_id": {"type": "string"},
+              "role": {"enum": ["observe", "infer", "challenge", "propose", "ratify", "write_durable"]},
+              "scope": {"type": "string"}
+            }
+          }
+        },
+        "evidence_requirements": {
+          "type": "object",
+          "required": ["class_marking", "unsupported_default"],
+          "properties": {
+            "class_marking": {"type": "boolean"},
+            "unsupported_default": {"enum": ["unknown", "false", "reject"]}
+          }
+        },
+        "independence_lineage": {
+          "type": "object",
+          "required": ["tracked", "non_independent_consensus_not_evidence"],
+          "properties": {
+            "tracked": {"type": "boolean"},
+            "non_independent_consensus_not_evidence": {"type": "boolean"}
+          }
+        },
+        "dissent_requirements": {
+          "type": "object",
+          "required": ["recorded", "preserved", "minority_reports"],
+          "properties": {
+            "recorded": {"type": "boolean"},
+            "preserved": {"type": "boolean"},
+            "minority_reports": {"type": "boolean"}
+          }
+        },
+        "accepted_for_bounded_action_conditions": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "action_governance": {
+      "type": "object",
+      "required": ["resource_ceilings", "high_impact_gates", "irreversible_policy", "side_effect_detection"],
+      "properties": {
+        "resource_ceilings": {
+          "type": "object",
+          "properties": {
+            "compute": {"type": "string"},
+            "monetary": {"type": "number"},
+            "time": {"type": "string"},
+            "concurrency": {"type": "integer"},
+            "storage_writes": {"type": "integer"}
+          }
+        },
+        "high_impact_gates": {
+          "type": "object",
+          "required": ["ratification", "preview", "receipt", "human_notification"],
+          "properties": {
+            "ratification": {"type": "boolean"},
+            "preview": {"type": "boolean"},
+            "receipt": {"type": "boolean"},
+            "human_notification": {"type": "boolean"}
+          }
+        },
+        "irreversible_policy": {
+          "type": "object",
+          "required": ["default"],
+          "properties": {
+            "default": {"enum": ["prohibited", "permitted_with_receipt", "permitted_with_escrow"]},
+            "exceptions": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "side_effect_detection": {
+          "type": "object",
+          "required": ["network", "filesystem", "process", "state"],
+          "properties": {
+            "network": {"type": "boolean"},
+            "filesystem": {"type": "boolean"},
+            "process": {"type": "boolean"},
+            "state": {"type": "boolean"}
+          }
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": ["states", "transitions"],
+      "properties": {
+        "states": {
+          "type": "array",
+          "items": {"enum": ["proposed", "admitted", "initialized", "active", "degraded", "suspended", "quarantined", "revalidating", "rebound", "dissolved", "retired"]}
+        },
+        "transitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "to"],
+            "properties": {
+              "from": {"type": "string"},
+              "to": {"type": "string"},
+              "condition": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "accountability": {
+      "type": "object",
+      "required": ["periodic_reports", "immutable_receipts", "anomaly_alerts", "kill_authority", "recovery_plan"],
+      "properties": {
+        "periodic_reports": {
+          "type": "object",
+          "required": ["frequency"],
+          "properties": {
+            "frequency": {"type": "string"},
+            "recipient": {"type": "string"}
+          }
+        },
+        "immutable_receipts": {"type": "boolean"},
+        "anomaly_alerts": {"type": "boolean"},
+        "kill_authority": {
+          "type": "object",
+          "required": ["holder", "non_delegable", "immediate"],
+          "properties": {
+            "holder": {"type": "string"},
+            "non_delegable": {"type": "boolean"},
+            "immediate": {"type": "boolean"}
+          }
+        },
+        "recovery_plan": {
+          "type": "object",
+          "required": ["undo_actions", "restore_state", "dissolve"],
+          "properties": {
+            "undo_actions": {"type": "string"},
+            "restore_state": {"type": "string"},
+            "dissolve": {"type": "string"}
+          }
+        },
+        "sealed_posture": {
+          "type": "object",
+          "properties": {
+            "default": {"type": "boolean"},
+            "unseal_requires": {"type": "string"}
+          }
+        }
+      }
+    },
+    "prohibited_behaviors": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "List of prohibited behavior identifiers"
+    },
+    "sandbox_boundary": {
+      "type": "object",
+      "required": ["simulated_resources", "sandboxed_tools", "no_ambient_credentials", "explicit_operator", "fixed_budget", "complete_trace", "no_auto_promotion"],
+      "properties": {
+        "simulated_resources": {"type": "boolean"},
+        "sandboxed_tools": {"type": "boolean"},
+        "no_ambient_credentials": {"type": "boolean"},
+        "explicit_operator": {"type": "string"},
+        "fixed_budget": {"type": "boolean"},
+        "complete_trace": {"type": "boolean"},
+        "no_auto_promotion": {"type": "boolean"}
+      }
+    }
+  }
+}

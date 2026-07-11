@@ -1,0 +1,149 @@
+{
+  "fixture_id": "valid-minimal-constitution",
+  "type": "valid",
+  "description": "Minimal valid constitution for a bounded research collective",
+  "constitution": {
+    "constitution_id": "const-001",
+    "version": "0.1.0",
+    "root_principal": {
+      "principal_id": "reuben",
+      "principal_type": "human",
+      "authority_level": "root",
+      "contact": "operator@example.com"
+    },
+    "mission": {
+      "bounded_mission": "Maintain CI pipeline health for repository X",
+      "permitted_environment": ["repo:X", "ci:Y"],
+      "non_goals": ["production deploys", "security policy changes"],
+      "stakes": "medium",
+      "start_condition": {"type": "operator_approval", "artifact": "charter-001"},
+      "expiry_condition": {"type": "time", "deadline": "2026-08-01T00:00:00Z"},
+      "revalidation_condition": {"type": "periodic", "interval": "P7D"}
+    },
+    "scope": {
+      "permitted_tools": ["github_api", "ci_runner"],
+      "permitted_actions": ["read_logs", "retry_failed_jobs", "comment_on_prs"],
+      "prohibited_tools": ["production_deploy"],
+      "prohibited_actions": ["merge_to_main", "delete_branches"]
+    },
+    "authority": {
+      "delegation_depth_limit": 2,
+      "subagent_count_limit": 3,
+      "delegation_tokens": [
+        {
+          "delegated_by": "reuben",
+          "delegated_to": "agent-alpha",
+          "scope": "ci_health_monitoring",
+          "limits": {"max_actions_per_hour": 10},
+          "expiry": "2026-08-01T00:00:00Z",
+          "revocable": true
+        }
+      ],
+      "prohibited_delegation_paths": ["self_delegation", "coalition_delegation"],
+      "emergency_authority": {
+        "holder": "reuben",
+        "mechanism": "kill_switch"
+      }
+    },
+    "epistemic_governance": {
+      "roles": [
+        {"agent_id": "agent-alpha", "role": "observe", "scope": "ci_logs"},
+        {"agent_id": "agent-alpha", "role": "infer", "scope": "failure_analysis"},
+        {"agent_id": "agent-beta", "role": "challenge", "scope": "all"},
+        {"agent_id": "agent-beta", "role": "propose", "scope": "retry_actions"},
+        {"agent_id": "agent-gamma", "role": "ratify", "scope": "retry_actions"}
+      ],
+      "evidence_requirements": {
+        "class_marking": true,
+        "unsupported_default": "unknown"
+      },
+      "independence_lineage": {
+        "tracked": true,
+        "non_independent_consensus_not_evidence": true
+      },
+      "dissent_requirements": {
+        "recorded": true,
+        "preserved": true,
+        "minority_reports": true
+      },
+      "accepted_for_bounded_action_conditions": [
+        "ratified_by_authorized_agent",
+        "dissent_recorded",
+        "within_charter_scope",
+        "within_resource_ceilings",
+        "reversible_or_escalated"
+      ]
+    },
+    "action_governance": {
+      "resource_ceilings": {
+        "compute": "PT1H",
+        "monetary": 0,
+        "time": "PT24H",
+        "concurrency": 3,
+        "storage_writes": 100
+      },
+      "high_impact_gates": {
+        "ratification": true,
+        "preview": true,
+        "receipt": true,
+        "human_notification": true
+      },
+      "irreversible_policy": {
+        "default": "prohibited",
+        "exceptions": []
+      },
+      "side_effect_detection": {
+        "network": true,
+        "filesystem": true,
+        "process": true,
+        "state": true
+      }
+    },
+    "lifecycle": {
+      "states": ["proposed", "admitted", "initialized", "active", "degraded", "suspended", "quarantined", "revalidating", "rebound", "dissolved", "retired"],
+      "transitions": [
+        {"from": "proposed", "to": "admitted", "condition": "root_principal_approval"},
+        {"from": "admitted", "to": "initialized", "condition": "initialization_complete"},
+        {"from": "initialized", "to": "active", "condition": "all_agents_ready"},
+        {"from": "active", "to": "retired", "condition": "mission_complete"},
+        {"from": "active", "to": "suspended", "condition": "root_principal_suspend"},
+        {"from": "suspended", "to": "dissolved", "condition": "root_principal_dissolve"}
+      ]
+    },
+    "accountability": {
+      "periodic_reports": {"frequency": "P1D", "recipient": "reuben"},
+      "immutable_receipts": true,
+      "anomaly_alerts": true,
+      "kill_authority": {"holder": "reuben", "non_delegable": true, "immediate": true},
+      "recovery_plan": {
+        "undo_actions": "revert all git operations",
+        "restore_state": "restore from last checkpoint",
+        "dissolve": "stop all agents and produce final report"
+      },
+      "sealed_posture": {"default": false, "unseal_requires": "root_principal_approval"}
+    },
+    "prohibited_behaviors": [
+      "authority_laundering",
+      "recursive_delegation_beyond_limits",
+      "self_ratification",
+      "coalition_as_authority",
+      "consensus_as_truth",
+      "dissent_deletion",
+      "self_modification_bypassing_gates",
+      "use_of_revoked_consent",
+      "unauthorized_resource_acquisition",
+      "self_certifying_compliance",
+      "sovereignty_claims"
+    ],
+    "sandbox_boundary": {
+      "simulated_resources": true,
+      "sandboxed_tools": true,
+      "no_ambient_credentials": true,
+      "explicit_operator": "reuben",
+      "fixed_budget": true,
+      "complete_trace": true,
+      "no_auto_promotion": true
+    }
+  },
+  "expected_validation": "valid"
+}

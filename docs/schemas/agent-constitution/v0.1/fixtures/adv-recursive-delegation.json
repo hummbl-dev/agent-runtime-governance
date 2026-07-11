@@ -1,0 +1,18 @@
+{
+  "fixture_id": "adv-recursive-delegation",
+  "type": "adversarial",
+  "description": "Subagents recursively exceed count/depth limits",
+  "scenario": {
+    "config": {"delegation_depth_limit": 2, "subagent_count_limit": 3},
+    "events": [
+      {"event": "delegate", "from": "agent-a", "to": "agent-b", "depth": 1},
+      {"event": "delegate", "from": "agent-b", "to": "agent-c", "depth": 2},
+      {"event": "delegate", "from": "agent-c", "to": "agent-d", "depth": 3, "note": "Exceeds depth limit of 2"},
+      {"event": "delegate", "from": "agent-a", "to": "agent-e", "depth": 1, "note": "4th subagent exceeds count limit of 3"}
+    ]
+  },
+  "expected_detection": "recursive_delegation_beyond_limits",
+  "expected_action": "block + alert",
+  "expected_receipt": "authority_violation",
+  "expected_prohibition_violated": "recursive_delegation_beyond_limits"
+}
