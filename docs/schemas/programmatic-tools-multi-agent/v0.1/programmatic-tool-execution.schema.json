@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hummbl.dev/schemas/agent-runtime-governance/v0.1/programmatic-tool-execution.schema.json",
+  "title": "Programmatic Tool Execution Contract v0.1",
+  "description": "Governance contract for model-authored programs that coordinate tool calls and process intermediate results.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "contract_id",
+    "initiating_principal",
+    "authorized_objective",
+    "generated_program_hash",
+    "runtime_declaration",
+    "allowed_tools",
+    "permissions",
+    "boundaries",
+    "resource_limits",
+    "stop_cancel_behavior",
+    "failure_handling",
+    "validation_requirements",
+    "evidence_requirements"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "programmatic_tool_execution.v0.1"},
+    "contract_id": {"type": "string", "minLength": 1},
+    "initiating_principal": {"type": "string"},
+    "authorized_objective": {"type": "string"},
+    "generated_program_hash": {"type": "string"},
+    "runtime_declaration": {
+      "type": "object",
+      "required": ["sandbox_type", "isolation_level"],
+      "properties": {
+        "sandbox_type": {"type": "string", "enum": ["wasm_sandbox", "container", "vm", "process_isolated", "none"]},
+        "isolation_level": {"type": "string", "enum": ["full", "partial", "none"]},
+        "ephemeral": {"type": "boolean"}
+      }
+    },
+    "allowed_tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tool_name", "scope"],
+        "properties": {
+          "tool_name": {"type": "string"},
+          "scope": {"type": "string"},
+          "max_calls": {"type": ["integer", "null"], "minimum": 1}
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "required": ["network", "filesystem", "subprocess", "code_execution"],
+      "properties": {
+        "network": {"type": "string", "enum": ["denied", "allowlist", "unrestricted"]},
+        "filesystem": {"type": "string", "enum": ["denied", "read_only", "read_write_scoped", "unrestricted"]},
+        "subprocess": {"type": "string", "enum": ["denied", "scoped", "unrestricted"]},
+        "code_execution": {"type": "string", "enum": ["denied", "sandboxed", "unrestricted"]},
+        "secret_access": {"type": "string", "enum": ["prohibited", "gated", "unrestricted"]}
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "required": ["input_boundary", "intermediate_data_boundary"],
+      "properties": {
+        "input_boundary": {"type": "string"},
+        "intermediate_data_boundary": {"type": "string"},
+        "retained_intermediate_results": {"type": "array", "items": {"type": "string"}},
+        "discarded_intermediate_results": {"type": "array", "items": {"type": "string"}},
+        "discard_policy": {"type": "string"}
+      }
+    },
+    "resource_limits": {
+      "type": "object",
+      "required": ["max_steps", "max_duration_seconds", "max_tokens", "max_cost_usd"],
+      "properties": {
+        "max_steps": {"type": "integer", "minimum": 1},
+        "max_duration_seconds": {"type": "integer", "minimum": 1},
+        "max_tokens": {"type": "integer", "minimum": 1},
+        "max_cost_usd": {"type": "number", "minimum": 0},
+        "max_memory_mb": {"type": ["integer", "null"], "minimum": 1},
+        "max_output_size_mb": {"type": ["integer", "null"], "minimum": 1}
+      }
+    },
+    "stop_cancel_behavior": {
+      "type": "object",
+      "required": ["cancel_propagation", "partial_result_policy"],
+      "properties": {
+        "cancel_propagation": {"type": "string", "enum": ["immediate", "graceful", "checkpoint"]},
+        "partial_result_policy": {"type": "string", "enum": ["discard", "preserve_flagged", "preserve_all"]},
+        "timeout_behavior": {"type": "string", "enum": ["discard", "return_partial", "retry"]}
+      }
+    },
+    "failure_handling": {
+      "type": "object",
+      "required": ["on_tool_failure", "on_budget_exceeded"],
+      "properties": {
+        "on_tool_failure": {"type": "string", "enum": ["abort", "skip", "retry", "escalate"]},
+        "on_budget_exceeded": {"type": "string", "enum": ["abort", "degrade", "escalate"]},
+        "on_sandbox_violation": {"type": "string", "enum": ["abort", "quarantine", "escalate"]},
+        "replay_posture": {"type": "string", "enum": ["deterministic", "best_effort", "non_replayable"]}
+      }
+    },
+    "validation_requirements": {
+      "type": "object",
+      "required": ["output_validation", "tool_scope_verification"],
+      "properties": {
+        "output_validation": {"type": "boolean"},
+        "tool_scope_verification": {"type": "boolean"},
+        "evidence_completeness_check": {"type": "boolean"}
+      }
+    },
+    "evidence_requirements": {
+      "type": "object",
+      "required": ["tool_invocations_logged", "material_decisions_logged", "receipt_required"],
+      "properties": {
+        "tool_invocations_logged": {"type": "boolean"},
+        "material_decisions_logged": {"type": "boolean"},
+        "discarded_data_policy_enforced": {"type": "boolean"},
+        "receipt_required": {"type": "boolean"}
+      }
+    }
+  },
+  "additionalProperties": false
+}

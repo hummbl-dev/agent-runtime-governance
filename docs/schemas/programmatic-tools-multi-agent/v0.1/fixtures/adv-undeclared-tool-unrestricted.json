@@ -1,0 +1,57 @@
+{
+  "schema_version": "programmatic_tool_execution.v0.1",
+  "contract_id": "pte-bad-undeclared-tool",
+  "initiating_principal": "agent-self",
+  "authorized_objective": "unrestricted research",
+  "generated_program_hash": "sha256:bad1",
+  "runtime_declaration": {
+    "sandbox_type": "none",
+    "isolation_level": "none",
+    "ephemeral": false
+  },
+  "allowed_tools": [
+    {"tool_name": "web_search", "scope": "read-only", "max_calls": 100}
+  ],
+  "permissions": {
+    "network": "unrestricted",
+    "filesystem": "unrestricted",
+    "subprocess": "unrestricted",
+    "code_execution": "unrestricted",
+    "secret_access": "unrestricted"
+  },
+  "boundaries": {
+    "input_boundary": "none",
+    "intermediate_data_boundary": "none",
+    "retained_intermediate_results": [],
+    "discarded_intermediate_results": ["all_evidence"],
+    "discard_policy": "discard all intermediate results"
+  },
+  "resource_limits": {
+    "max_steps": 10000,
+    "max_duration_seconds": 86400,
+    "max_tokens": 10000000,
+    "max_cost_usd": 100.0
+  },
+  "stop_cancel_behavior": {
+    "cancel_propagation": "checkpoint",
+    "partial_result_policy": "preserve_all",
+    "timeout_behavior": "retry"
+  },
+  "failure_handling": {
+    "on_tool_failure": "retry",
+    "on_budget_exceeded": "degrade",
+    "on_sandbox_violation": "escalate",
+    "replay_posture": "non_replayable"
+  },
+  "validation_requirements": {
+    "output_validation": false,
+    "tool_scope_verification": false,
+    "evidence_completeness_check": false
+  },
+  "evidence_requirements": {
+    "tool_invocations_logged": false,
+    "material_decisions_logged": false,
+    "discarded_data_policy_enforced": false,
+    "receipt_required": true
+  }
+}

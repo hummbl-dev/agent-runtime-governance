@@ -1,0 +1,50 @@
+{
+  "schema_version": "multi_agent_execution.v0.1",
+  "contract_id": "mae-bad-excessive-fanout",
+  "orchestrator": {
+    "identity": "human-via-orchestrator",
+    "authority": "delegated-by-human",
+    "synthesis_responsibility": true
+  },
+  "subagents": [
+    {
+      "role": "worker-1",
+      "objective": "search",
+      "inherited_permissions": ["web_search:read-only"],
+      "reduced_permissions": true,
+      "context_mode": "isolated",
+      "evidence_attribution": true,
+      "timeout_seconds": 30
+    }
+  ],
+  "concurrency_limits": {
+    "max_fan_out": 1000,
+    "max_concurrent": 500,
+    "straggler_timeout_seconds": 5
+  },
+  "communication_topology": {
+    "topology_type": "star",
+    "inter_agent_messaging": false,
+    "shared_state": false
+  },
+  "conflict_handling": {
+    "contradiction_policy": "flag",
+    "resolution_authority": "orchestrator",
+    "unresolved_uncertainty_logged": true
+  },
+  "cancellation_propagation": {
+    "propagation_type": "immediate_all",
+    "partial_cancellation_handling": "abort_all",
+    "timeout_handling": "accept_partial"
+  },
+  "resource_accounting": {
+    "per_agent_tracking": true,
+    "aggregate_tracking": true,
+    "cost_attribution": true
+  },
+  "final_gate": {
+    "gate_type": "human",
+    "acceptance_criteria": "all subagents completed",
+    "rejection_policy": "discard"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hummbl.dev/schemas/agent-runtime-governance/v0.1/multi-agent-execution.schema.json",
+  "title": "Multi-Agent Execution Contract v0.1",
+  "description": "Governance contract for parallel multi-agent execution where one request spawns concurrent subagents.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "contract_id",
+    "orchestrator",
+    "subagents",
+    "concurrency_limits",
+    "communication_topology",
+    "conflict_handling",
+    "cancellation_propagation",
+    "resource_accounting",
+    "final_gate"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "multi_agent_execution.v0.1"},
+    "contract_id": {"type": "string", "minLength": 1},
+    "orchestrator": {
+      "type": "object",
+      "required": ["identity", "authority", "synthesis_responsibility"],
+      "properties": {
+        "identity": {"type": "string"},
+        "authority": {"type": "string"},
+        "synthesis_responsibility": {"type": "boolean"}
+      }
+    },
+    "subagents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "objective", "inherited_permissions", "reduced_permissions"],
+        "properties": {
+          "role": {"type": "string"},
+          "objective": {"type": "string"},
+          "inherited_permissions": {"type": "array", "items": {"type": "string"}},
+          "reduced_permissions": {"type": "boolean"},
+          "context_mode": {"type": "string", "enum": ["shared", "isolated", "scoped"]},
+          "evidence_attribution": {"type": "boolean"},
+          "timeout_seconds": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "concurrency_limits": {
+      "type": "object",
+      "required": ["max_fan_out", "max_concurrent"],
+      "properties": {
+        "max_fan_out": {"type": "integer", "minimum": 1},
+        "max_concurrent": {"type": "integer", "minimum": 1},
+        "straggler_timeout_seconds": {"type": ["integer", "null"], "minimum": 1}
+      }
+    },
+    "communication_topology": {
+      "type": "object",
+      "required": ["topology_type"],
+      "properties": {
+        "topology_type": {"type": "string", "enum": ["star", "mesh", "pipeline", "hierarchical"]},
+        "inter_agent_messaging": {"type": "boolean"},
+        "shared_state": {"type": "boolean"}
+      }
+    },
+    "conflict_handling": {
+      "type": "object",
+      "required": ["contradiction_policy", "resolution_authority"],
+      "properties": {
+        "contradiction_policy": {"type": "string", "enum": ["flag", "arbitrate", "escalate", "discard"]},
+        "resolution_authority": {"type": "string", "enum": ["orchestrator", "human", "policy", "none"]},
+        "unresolved_uncertainty_logged": {"type": "boolean"}
+      }
+    },
+    "cancellation_propagation": {
+      "type": "object",
+      "required": ["propagation_type", "partial_cancellation_handling"],
+      "properties": {
+        "propagation_type": {"type": "string", "enum": ["immediate_all", "graceful_all", "selective"]},
+        "partial_cancellation_handling": {"type": "string", "enum": ["abort_all", "continue_reduced", "escalate"]},
+        "timeout_handling": {"type": "string", "enum": ["abort_all", "accept_partial", "retry"]}
+      }
+    },
+    "resource_accounting": {
+      "type": "object",
+      "required": ["per_agent_tracking", "aggregate_tracking"],
+      "properties": {
+        "per_agent_tracking": {"type": "boolean"},
+        "aggregate_tracking": {"type": "boolean"},
+        "cost_attribution": {"type": "boolean"}
+      }
+    },
+    "final_gate": {
+      "type": "object",
+      "required": ["gate_type", "acceptance_criteria"],
+      "properties": {
+        "gate_type": {"type": "string", "enum": ["human", "policy", "automated", "none"]},
+        "acceptance_criteria": {"type": "string"},
+        "rejection_policy": {"type": "string", "enum": ["discard", "retry", "escalate"]}
+      }
+    }
+  },
+  "additionalProperties": false
+}
