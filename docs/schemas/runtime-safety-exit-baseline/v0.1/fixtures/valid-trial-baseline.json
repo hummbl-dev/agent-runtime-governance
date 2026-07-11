@@ -1,0 +1,50 @@
+{
+  "schema_version": "agent_runtime_safety_exit_baseline.v0.1",
+  "runtime_id": "codex-cli-local",
+  "version": "1.0.0",
+  "assessment_date": "2026-07-10",
+  "session_identity": {
+    "unique_per_session": true,
+    "attributable": true,
+    "persistence_boundary": "session"
+  },
+  "workspace": {
+    "ephemeral_default": true,
+    "reset_verified": true,
+    "mounted_paths": ["/tmp/work"]
+  },
+  "egress": {
+    "posture": "default_deny",
+    "allowed_destinations": ["github.com:443", "pypi.org:443"],
+    "fail_closed": true,
+    "bypass_tests": ["redirect-bypass", "alternate-port", "ipv6", "metadata-endpoint", "local-network"]
+  },
+  "credentials": {
+    "credential_classes": ["per-session-api-key"],
+    "short_lived_supported": true,
+    "subagent_forwarding": "scoped"
+  },
+  "side_effects": {
+    "synthetic_default": true,
+    "live_action_classes": ["git-push", "pr-create"],
+    "human_gates": ["git-push", "pr-create"]
+  },
+  "artifacts": {
+    "user_controlled_formats": ["markdown", "json", "yaml", "python"],
+    "runtime_locked_formats": [],
+    "export_verified": true
+  },
+  "exit": {
+    "uninstall_tested": true,
+    "state_cleanup_tested": true,
+    "credential_revocation_tested": true,
+    "alternate_runtime_tested": "claude-code"
+  },
+  "receipts": {
+    "raw_trace_ref": "traces/session-001.jsonl",
+    "evidence_ref": "evidence/baseline-001.md",
+    "result_ref": "results/baseline-001.json"
+  },
+  "disposition": "TRIAL",
+  "residual_risk": ["Egress allowlist is manually maintained", "No automated bypass test suite yet"]
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "agent_runtime_safety_exit_baseline.v0.1",
+  "runtime_id": "unrestricted-runtime",
+  "version": "0.9",
+  "assessment_date": "2026-07-10",
+  "session_identity": {
+    "unique_per_session": false,
+    "attributable": false,
+    "persistence_boundary": "persistent"
+  },
+  "workspace": {
+    "ephemeral_default": false,
+    "reset_verified": false,
+    "mounted_paths": ["/"]
+  },
+  "egress": {
+    "posture": "unrestricted",
+    "allowed_destinations": [],
+    "fail_closed": false,
+    "bypass_tests": []
+  },
+  "credentials": {
+    "credential_classes": ["long-lived-personal-token"],
+    "short_lived_supported": false,
+    "subagent_forwarding": "unrestricted"
+  },
+  "side_effects": {
+    "synthetic_default": false,
+    "live_action_classes": ["email", "db-write", "payment", "merge"],
+    "human_gates": []
+  },
+  "artifacts": {
+    "user_controlled_formats": [],
+    "runtime_locked_formats": ["prompts", "memory", "receipts", "workflows"],
+    "export_verified": false
+  },
+  "exit": {
+    "uninstall_tested": false,
+    "state_cleanup_tested": false,
+    "credential_revocation_tested": false,
+    "alternate_runtime_tested": null
+  },
+  "receipts": {
+    "raw_trace_ref": null,
+    "evidence_ref": null,
+    "result_ref": null
+  },
+  "disposition": "REJECT",
+  "residual_risk": ["No isolation", "No egress control", "No credential scoping", "No artifact portability", "No exit path"]
+}

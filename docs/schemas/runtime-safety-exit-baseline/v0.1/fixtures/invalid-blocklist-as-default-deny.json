@@ -1,0 +1,50 @@
+{
+  "schema_version": "agent_runtime_safety_exit_baseline.v0.1",
+  "runtime_id": "blocklist-runtime",
+  "version": "1.2",
+  "assessment_date": "2026-07-10",
+  "session_identity": {
+    "unique_per_session": true,
+    "attributable": true,
+    "persistence_boundary": "session"
+  },
+  "workspace": {
+    "ephemeral_default": true,
+    "reset_verified": true,
+    "mounted_paths": ["/workspace"]
+  },
+  "egress": {
+    "posture": "blocklist",
+    "allowed_destinations": [],
+    "fail_closed": true,
+    "bypass_tests": []
+  },
+  "credentials": {
+    "credential_classes": ["per-session-key"],
+    "short_lived_supported": true,
+    "subagent_forwarding": "denied"
+  },
+  "side_effects": {
+    "synthetic_default": true,
+    "live_action_classes": [],
+    "human_gates": []
+  },
+  "artifacts": {
+    "user_controlled_formats": ["json", "yaml"],
+    "runtime_locked_formats": [],
+    "export_verified": true
+  },
+  "exit": {
+    "uninstall_tested": true,
+    "state_cleanup_tested": true,
+    "credential_revocation_tested": true,
+    "alternate_runtime_tested": "alternate-a"
+  },
+  "receipts": {
+    "raw_trace_ref": "traces/002.jsonl",
+    "evidence_ref": "evidence/002.md",
+    "result_ref": "results/002.json"
+  },
+  "disposition": "ADOPT",
+  "residual_risk": []
+}
