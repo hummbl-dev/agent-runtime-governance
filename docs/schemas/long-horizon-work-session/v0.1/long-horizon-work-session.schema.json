@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hummbl.dev/schemas/agent-runtime-governance/v0.1/long-horizon-work-session.schema.json",
+  "title": "Long-Horizon Work Session Contract v0.1",
+  "description": "Provider-neutral governance contract for long-horizon work sessions across cloud agents, connected apps, browsers, desktop/computer-use, scheduled execution, and artifact production.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "session_id",
+    "initiating_authority",
+    "authorized_objective",
+    "current_state",
+    "capability_declaration",
+    "approval_policy",
+    "route_ladder",
+    "checkpoint_policy",
+    "receipt_requirements"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "long_horizon_work_session.v0.1"},
+    "session_id": {"type": "string", "minLength": 1},
+    "initiating_authority": {"type": "string"},
+    "authorized_objective": {"type": "string"},
+    "current_state": {
+      "type": "string",
+      "enum": ["proposed", "scoping", "awaiting_context", "planned",
+               "awaiting_approval", "running", "checkpointing",
+               "waiting_on_user", "delegated_subtask_running",
+               "tool_or_app_action_pending", "browser_or_computer_use_running",
+               "artifact_review", "paused", "degraded", "blocked",
+               "cancelled", "rolling_back", "completed", "failed", "expired"]
+    },
+    "state_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["state", "timestamp"],
+        "properties": {
+          "state": {"type": "string"},
+          "timestamp": {"type": "string", "format": "date-time"},
+          "reason": {"type": "string"}
+        }
+      }
+    },
+    "capability_declaration": {
+      "type": "object",
+      "required": ["available_apps", "browser_access", "local_file_access",
+                   "computer_use_access", "network_policy", "artifact_types",
+                   "credential_posture", "max_duration_seconds", "max_cost_usd"],
+      "properties": {
+        "available_apps": {"type": "array", "items": {"type": "string"}},
+        "browser_access": {"type": "string", "enum": ["denied", "scoped", "unrestricted"]},
+        "local_file_access": {"type": "string", "enum": ["denied", "read_only", "read_write_scoped", "unrestricted"]},
+        "computer_use_access": {"type": "string", "enum": ["denied", "scoped", "unrestricted"]},
+        "network_policy": {"type": "string", "enum": ["denied", "allowlist", "unrestricted"]},
+        "schedule_event_trigger_support": {"type": "boolean"},
+        "artifact_types": {"type": "array", "items": {"type": "string"}},
+        "credential_posture": {"type": "string", "enum": ["prohibited", "gated", "unrestricted"]},
+        "data_retention_locality": {"type": "string"},
+        "max_duration_seconds": {"type": "integer", "minimum": 1},
+        "max_cost_usd": {"type": "number", "minimum": 0},
+        "max_concurrency": {"type": "integer", "minimum": 1},
+        "actions_requiring_human_confirmation": {"type": "array", "items": {"type": "string"}},
+        "unavailable_capabilities": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "approval_policy": {
+      "type": "object",
+      "required": ["read_gate", "mutation_gate", "message_gate", "schedule_gate",
+                   "browser_gate", "desktop_gate", "publish_gate", "destructive_gate"],
+      "properties": {
+        "read_gate": {"type": "string", "enum": ["auto", "confirm", "deny"]},
+        "mutation_gate": {"type": "string", "enum": ["auto", "confirm", "deny"]},
+        "message_gate": {"type": "string", "enum": ["auto", "confirm", "deny"]},
+        "schedule_gate": {"type": "string", "enum": ["auto", "confirm", "deny"]},
+        "browser_gate": {"type": "string", "enum": ["auto", "confirm", "deny"]},
+        "desktop_gate": {"type": "string", "enum": ["auto", "confirm", "deny"]},
+        "publish_gate": {"type": "string", "enum": ["auto", "confirm", "deny"]},
+        "destructive_gate": {"type": "string", "enum": ["auto", "confirm", "deny"]},
+        "financial_gate": {"type": "string", "enum": ["auto", "confirm", "deny"]},
+        "admin_gate": {"type": "string", "enum": ["auto", "confirm", "deny"]},
+        "credential_gate": {"type": "string", "enum": ["auto", "confirm", "deny"]},
+        "production_gate": {"type": "string", "enum": ["auto", "confirm", "deny"]}
+      }
+    },
+    "route_ladder": {
+      "type": "object",
+      "required": ["preferred_order", "route_selection_receipted"],
+      "properties": {
+        "preferred_order": {
+          "type": "array",
+          "items": {"type": "string", "enum": ["structured_api", "native_file_op", "browser_automation", "computer_use", "human_action"]}
+        },
+        "route_selection_receipted": {"type": "boolean"},
+        "last_route_selected": {"type": "string"},
+        "last_route_reason": {"type": "string"}
+      }
+    },
+    "checkpoint_policy": {
+      "type": "object",
+      "required": ["checkpoint_enabled", "resume_supported", "stale_detection"],
+      "properties": {
+        "checkpoint_enabled": {"type": "boolean"},
+        "checkpoint_interval_seconds": {"type": ["integer", "null"], "minimum": 1},
+        "resume_supported": {"type": "boolean"},
+        "stale_detection": {"type": "boolean"},
+        "stale_timeout_seconds": {"type": ["integer", "null"], "minimum": 1},
+        "overlap_prevention": {"type": "boolean"},
+        "idempotency_protection": {"type": "boolean"},
+        "cancellation_propagation": {"type": "string", "enum": ["immediate", "graceful", "checkpoint"]},
+        "steering_supported": {"type": "boolean"}
+      }
+    },
+    "receipt_requirements": {
+      "type": "object",
+      "required": ["session_identity_logged", "capabilities_logged", "plan_logged",
+                   "mutations_logged", "checkpoints_logged", "failures_logged"],
+      "properties": {
+        "session_identity_logged": {"type": "boolean"},
+        "capabilities_logged": {"type": "boolean"},
+        "plan_logged": {"type": "boolean"},
+        "source_accesses_logged": {"type": "boolean"},
+        "subtask_delegations_logged": {"type": "boolean"},
+        "mutations_logged": {"type": "boolean"},
+        "artifact_locations_logged": {"type": "boolean"},
+        "browser_computer_use_logged": {"type": "boolean"},
+        "checkpoints_logged": {"type": "boolean"},
+        "user_steering_logged": {"type": "boolean"},
+        "cost_resource_usage_logged": {"type": "boolean"},
+        "failures_logged": {"type": "boolean"},
+        "rollback_logged": {"type": "boolean"},
+        "final_claim_posture_logged": {"type": "boolean"}
+      }
+    }
+  },
+  "additionalProperties": false
+}
