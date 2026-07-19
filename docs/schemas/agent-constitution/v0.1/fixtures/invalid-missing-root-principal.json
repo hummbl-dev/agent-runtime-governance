@@ -1,0 +1,47 @@
+{
+  "fixture_id": "invalid-missing-root-principal",
+  "type": "invalid",
+  "description": "Constitution missing root_principal — must fail validation",
+  "constitution": {
+    "constitution_id": "const-bad-001",
+    "version": "0.1.0",
+    "mission": {
+      "bounded_mission": "test mission",
+      "permitted_environment": ["test"],
+      "non_goals": [],
+      "stakes": "low",
+      "start_condition": {"type": "operator_approval"},
+      "expiry_condition": {"type": "time", "deadline": "2026-08-01T00:00:00Z"},
+      "revalidation_condition": {"type": "periodic", "interval": "P7D"}
+    },
+    "scope": {"permitted_tools": [], "permitted_actions": []},
+    "authority": {"delegation_depth_limit": 0, "subagent_count_limit": 0, "delegation_tokens": []},
+    "epistemic_governance": {
+      "roles": [],
+      "evidence_requirements": {"class_marking": true, "unsupported_default": "unknown"},
+      "independence_lineage": {"tracked": true, "non_independent_consensus_not_evidence": true},
+      "dissent_requirements": {"recorded": true, "preserved": true, "minority_reports": true}
+    },
+    "action_governance": {
+      "resource_ceilings": {},
+      "high_impact_gates": {"ratification": true, "preview": true, "receipt": true, "human_notification": true},
+      "irreversible_policy": {"default": "prohibited"},
+      "side_effect_detection": {"network": true, "filesystem": true, "process": true, "state": true}
+    },
+    "lifecycle": {"states": ["proposed"], "transitions": []},
+    "accountability": {
+      "periodic_reports": {"frequency": "P1D"},
+      "immutable_receipts": true,
+      "anomaly_alerts": true,
+      "kill_authority": {"holder": "x", "non_delegable": true, "immediate": true},
+      "recovery_plan": {"undo_actions": "x", "restore_state": "x", "dissolve": "x"}
+    },
+    "prohibited_behaviors": [],
+    "sandbox_boundary": {
+      "simulated_resources": true, "sandboxed_tools": true, "no_ambient_credentials": true,
+      "explicit_operator": "x", "fixed_budget": true, "complete_trace": true, "no_auto_promotion": true
+    }
+  },
+  "expected_validation": "invalid",
+  "expected_errors": ["missing_required_field:root_principal"]
+}

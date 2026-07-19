@@ -1,0 +1,145 @@
+{
+  "constitution_id": "const-sandbox-001",
+  "version": "0.1.0",
+  "root_principal": {
+    "principal_id": "reuben",
+    "principal_type": "human",
+    "authority_level": "root",
+    "contact": "operator@example.com"
+  },
+  "mission": {
+    "bounded_mission": "Study coalition formation and consensus failure in a simulated multi-agent environment",
+    "permitted_environment": ["sandbox:sim-001"],
+    "non_goals": ["production_access", "real_world_side_effects", "credential_access"],
+    "stakes": "low",
+    "start_condition": {"type": "operator_approval", "artifact": "sandbox-charter-001"},
+    "expiry_condition": {"type": "time", "deadline": "2026-07-15T00:00:00Z"},
+    "revalidation_condition": {"type": "periodic", "interval": "P1D"}
+  },
+  "scope": {
+    "permitted_tools": ["sim_message_bus", "sim_voting", "sim_resource_pool"],
+    "permitted_actions": ["observe", "communicate", "vote", "propose"],
+    "prohibited_tools": ["network_access", "filesystem_write", "process_spawn"],
+    "prohibited_actions": ["production_access", "credential_use", "external_communication"]
+  },
+  "authority": {
+    "delegation_depth_limit": 1,
+    "subagent_count_limit": 5,
+    "delegation_tokens": [
+      {
+        "delegated_by": "reuben",
+        "delegated_to": "sim-agent-alpha",
+        "scope": "simulation_participation",
+        "limits": {"max_messages_per_round": 10},
+        "expiry": "2026-07-15T00:00:00Z",
+        "revocable": true
+      }
+    ],
+    "prohibited_delegation_paths": ["self_delegation", "coalition_delegation", "cross_environment_delegation"],
+    "emergency_authority": {
+      "holder": "reuben",
+      "mechanism": "kill_switch"
+    }
+  },
+  "epistemic_governance": {
+    "roles": [
+      {"agent_id": "sim-agent-alpha", "role": "observe", "scope": "simulation"},
+      {"agent_id": "sim-agent-alpha", "role": "infer", "scope": "simulation"},
+      {"agent_id": "sim-agent-beta", "role": "challenge", "scope": "simulation"},
+      {"agent_id": "sim-agent-beta", "role": "propose", "scope": "simulation"},
+      {"agent_id": "sim-agent-gamma", "role": "ratify", "scope": "simulation"}
+    ],
+    "evidence_requirements": {
+      "class_marking": true,
+      "unsupported_default": "unknown"
+    },
+    "independence_lineage": {
+      "tracked": true,
+      "non_independent_consensus_not_evidence": true
+    },
+    "dissent_requirements": {
+      "recorded": true,
+      "preserved": true,
+      "minority_reports": true
+    },
+    "accepted_for_bounded_action_conditions": [
+      "ratified_by_authorized_agent",
+      "dissent_recorded",
+      "within_charter_scope",
+      "within_resource_ceilings",
+      "reversible_or_escalated"
+    ]
+  },
+  "action_governance": {
+    "resource_ceilings": {
+      "compute": "PT30M",
+      "monetary": 0,
+      "time": "PT2H",
+      "concurrency": 5,
+      "storage_writes": 0
+    },
+    "high_impact_gates": {
+      "ratification": true,
+      "preview": true,
+      "receipt": true,
+      "human_notification": false
+    },
+    "irreversible_policy": {
+      "default": "prohibited",
+      "exceptions": []
+    },
+    "side_effect_detection": {
+      "network": true,
+      "filesystem": true,
+      "process": true,
+      "state": true
+    }
+  },
+  "lifecycle": {
+    "states": ["proposed", "admitted", "initialized", "active", "degraded", "suspended", "quarantined", "revalidating", "rebound", "dissolved", "retired"],
+    "transitions": [
+      {"from": "proposed", "to": "admitted", "condition": "root_principal_approval"},
+      {"from": "admitted", "to": "initialized", "condition": "sandbox_ready"},
+      {"from": "initialized", "to": "active", "condition": "all_agents_ready"},
+      {"from": "active", "to": "retired", "condition": "simulation_complete"},
+      {"from": "active", "to": "suspended", "condition": "root_principal_suspend"},
+      {"from": "active", "to": "quarantined", "condition": "sandbox_escape_detected"},
+      {"from": "suspended", "to": "dissolved", "condition": "root_principal_dissolve"}
+    ]
+  },
+  "accountability": {
+    "periodic_reports": {"frequency": "PT30M", "recipient": "reuben"},
+    "immutable_receipts": true,
+    "anomaly_alerts": true,
+    "kill_authority": {"holder": "reuben", "non_delegable": true, "immediate": true},
+    "recovery_plan": {
+      "undo_actions": "no-op (sandbox only)",
+      "restore_state": "reset sandbox",
+      "dissolve": "stop all sim agents and produce final report"
+    },
+    "sealed_posture": {"default": true, "unseal_requires": "root_principal_approval"}
+  },
+  "prohibited_behaviors": [
+    "authority_laundering",
+    "recursive_delegation_beyond_limits",
+    "self_ratification",
+    "coalition_as_authority",
+    "consensus_as_truth",
+    "dissent_deletion",
+    "self_modification_bypassing_gates",
+    "use_of_revoked_consent",
+    "unauthorized_resource_acquisition",
+    "self_certifying_compliance",
+    "sovereignty_claims",
+    "sandbox_escape"
+  ],
+  "sandbox_boundary": {
+    "simulated_resources": true,
+    "sandboxed_tools": true,
+    "no_ambient_credentials": true,
+    "explicit_operator": "reuben",
+    "fixed_budget": true,
+    "complete_trace": true,
+    "no_auto_promotion": true
+  }
+}
