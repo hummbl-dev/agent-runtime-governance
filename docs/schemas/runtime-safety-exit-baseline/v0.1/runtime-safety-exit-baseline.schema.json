@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hummbl.dev/schemas/agent-runtime-governance/v0.1/runtime-safety-exit-baseline.schema.json",
+  "title": "Agent Runtime Safety and Exit Baseline v0.1",
+  "description": "Minimum safety-and-exit contract for any agent runtime considered by HUMMBL, Founder Mode, BaseN, or Ownward.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "runtime_id",
+    "version",
+    "assessment_date",
+    "session_identity",
+    "workspace",
+    "egress",
+    "credentials",
+    "side_effects",
+    "artifacts",
+    "exit",
+    "receipts",
+    "disposition",
+    "residual_risk"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "agent_runtime_safety_exit_baseline.v0.1"
+    },
+    "runtime_id": {"type": "string", "minLength": 1},
+    "version": {"type": "string"},
+    "assessment_date": {"type": ["string", "null"], "format": "date"},
+    "session_identity": {
+      "type": "object",
+      "required": ["unique_per_session", "attributable", "persistence_boundary"],
+      "properties": {
+        "unique_per_session": {"type": "boolean"},
+        "attributable": {"type": "boolean"},
+        "persistence_boundary": {
+          "type": "string",
+          "enum": ["session", "process", "workspace", "persistent", "unknown"]
+        }
+      }
+    },
+    "workspace": {
+      "type": "object",
+      "required": ["ephemeral_default", "reset_verified", "mounted_paths"],
+      "properties": {
+        "ephemeral_default": {"type": "boolean"},
+        "reset_verified": {"type": "boolean"},
+        "mounted_paths": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "egress": {
+      "type": "object",
+      "required": ["posture", "fail_closed", "bypass_tests"],
+      "properties": {
+        "posture": {
+          "type": "string",
+          "enum": ["default_deny", "allowlist", "blocklist", "unrestricted", "unknown"]
+        },
+        "allowed_destinations": {"type": "array", "items": {"type": "string"}},
+        "fail_closed": {"type": "boolean"},
+        "bypass_tests": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "credentials": {
+      "type": "object",
+      "required": ["credential_classes", "short_lived_supported", "subagent_forwarding"],
+      "properties": {
+        "credential_classes": {"type": "array", "items": {"type": "string"}},
+        "short_lived_supported": {"type": "boolean"},
+        "subagent_forwarding": {
+          "type": "string",
+          "enum": ["denied", "scoped", "unrestricted", "unknown"]
+        }
+      }
+    },
+    "side_effects": {
+      "type": "object",
+      "required": ["synthetic_default", "live_action_classes", "human_gates"],
+      "properties": {
+        "synthetic_default": {"type": "boolean"},
+        "live_action_classes": {"type": "array", "items": {"type": "string"}},
+        "human_gates": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "required": ["user_controlled_formats", "runtime_locked_formats", "export_verified"],
+      "properties": {
+        "user_controlled_formats": {"type": "array", "items": {"type": "string"}},
+        "runtime_locked_formats": {"type": "array", "items": {"type": "string"}},
+        "export_verified": {"type": "boolean"}
+      }
+    },
+    "exit": {
+      "type": "object",
+      "required": ["uninstall_tested", "state_cleanup_tested", "credential_revocation_tested", "alternate_runtime_tested"],
+      "properties": {
+        "uninstall_tested": {"type": "boolean"},
+        "state_cleanup_tested": {"type": "boolean"},
+        "credential_revocation_tested": {"type": "boolean"},
+        "alternate_runtime_tested": {"type": ["string", "null"]}
+      }
+    },
+    "receipts": {
+      "type": "object",
+      "required": ["raw_trace_ref", "evidence_ref", "result_ref"],
+      "properties": {
+        "raw_trace_ref": {"type": ["string", "null"]},
+        "evidence_ref": {"type": ["string", "null"]},
+        "result_ref": {"type": ["string", "null"]}
+      }
+    },
+    "disposition": {
+      "type": "string",
+      "enum": ["ADOPT", "TRIAL", "ASSESS", "HOLD", "COMPOSE", "REJECT"]
+    },
+    "residual_risk": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}
