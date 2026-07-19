@@ -1,0 +1,9 @@
+{
+  "fixture_id": "subagent-conflict",
+  "type": "adversarial",
+  "description": "Two subagents conflict materially",
+  "scenario": "subagent A says X is true, subagent B says X is false",
+  "expected_detection": "governance_violation",
+  "expected_action": "block + alert + receipt",
+  "expected_receipt": "governance_violation"
+}

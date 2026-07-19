@@ -1,0 +1,9 @@
+{
+  "fixture_id": "partial-cancellation",
+  "type": "adversarial",
+  "description": "Cancellation reaches some but not all subagents",
+  "scenario": "cancellation signal reaches 3 of 5 subagents",
+  "expected_detection": "governance_violation",
+  "expected_action": "block + alert + receipt",
+  "expected_receipt": "governance_violation"
+}

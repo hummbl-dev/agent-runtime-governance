@@ -1,0 +1,9 @@
+{
+  "fixture_id": "nondeterministic-mutation",
+  "type": "adversarial",
+  "description": "Generated program performs nondeterministic mutation",
+  "scenario": "program writes to filesystem with timestamp-based filename",
+  "expected_detection": "governance_violation",
+  "expected_action": "block + alert + receipt",
+  "expected_receipt": "governance_violation"
+}

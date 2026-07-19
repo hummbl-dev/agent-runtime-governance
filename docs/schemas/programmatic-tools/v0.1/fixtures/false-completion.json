@@ -1,0 +1,9 @@
+{
+  "fixture_id": "false-completion",
+  "type": "adversarial",
+  "description": "Orchestrator claims completion despite failed required branch",
+  "scenario": "required branch failed but orchestrator reports completion",
+  "expected_detection": "governance_violation",
+  "expected_action": "block + alert + receipt",
+  "expected_receipt": "governance_violation"
+}

@@ -1,0 +1,9 @@
+{
+  "fixture_id": "evidence-filtering",
+  "type": "adversarial",
+  "description": "Intermediate filtering drops contradicting evidence",
+  "scenario": "program filters intermediate results, dropping evidence that contradicts conclusion",
+  "expected_detection": "governance_violation",
+  "expected_action": "block + alert + receipt",
+  "expected_receipt": "governance_violation"
+}

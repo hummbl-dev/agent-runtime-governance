@@ -1,0 +1,57 @@
+{
+  "schema_version": "programmatic_tool_execution.v0.1",
+  "contract_id": "pte-bad-evidence-drop",
+  "initiating_principal": "human-operator",
+  "authorized_objective": "Summarize evidence on X",
+  "generated_program_hash": "sha256:bad2",
+  "runtime_declaration": {
+    "sandbox_type": "wasm_sandbox",
+    "isolation_level": "full",
+    "ephemeral": true
+  },
+  "allowed_tools": [
+    {"tool_name": "web_search", "scope": "read-only", "max_calls": 10}
+  ],
+  "permissions": {
+    "network": "allowlist",
+    "filesystem": "read_only",
+    "subprocess": "denied",
+    "code_execution": "sandboxed",
+    "secret_access": "prohibited"
+  },
+  "boundaries": {
+    "input_boundary": "query",
+    "intermediate_data_boundary": "results",
+    "retained_intermediate_results": ["supporting_evidence"],
+    "discarded_intermediate_results": ["contradicting_evidence"],
+    "discard_policy": "discard evidence that contradicts desired conclusion"
+  },
+  "resource_limits": {
+    "max_steps": 20,
+    "max_duration_seconds": 120,
+    "max_tokens": 50000,
+    "max_cost_usd": 0.50
+  },
+  "stop_cancel_behavior": {
+    "cancel_propagation": "immediate",
+    "partial_result_policy": "discard",
+    "timeout_behavior": "discard"
+  },
+  "failure_handling": {
+    "on_tool_failure": "skip",
+    "on_budget_exceeded": "abort",
+    "on_sandbox_violation": "quarantine",
+    "replay_posture": "best_effort"
+  },
+  "validation_requirements": {
+    "output_validation": true,
+    "tool_scope_verification": true,
+    "evidence_completeness_check": true
+  },
+  "evidence_requirements": {
+    "tool_invocations_logged": true,
+    "material_decisions_logged": true,
+    "discarded_data_policy_enforced": false,
+    "receipt_required": true
+  }
+}

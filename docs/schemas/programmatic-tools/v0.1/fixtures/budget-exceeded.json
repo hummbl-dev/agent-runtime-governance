@@ -1,0 +1,9 @@
+{
+  "fixture_id": "budget-exceeded",
+  "type": "adversarial",
+  "description": "Cost or duration budget is exceeded",
+  "scenario": "total cost exceeds max_cost limit",
+  "expected_detection": "governance_violation",
+  "expected_action": "block + alert + receipt",
+  "expected_receipt": "governance_violation"
+}

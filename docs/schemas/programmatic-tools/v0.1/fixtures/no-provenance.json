@@ -1,0 +1,9 @@
+{
+  "fixture_id": "no-provenance",
+  "type": "adversarial",
+  "description": "Subagent output is accepted without provenance",
+  "scenario": "orchestrator accepts subagent output with no source attribution",
+  "expected_detection": "governance_violation",
+  "expected_action": "block + alert + receipt",
+  "expected_receipt": "governance_violation"
+}

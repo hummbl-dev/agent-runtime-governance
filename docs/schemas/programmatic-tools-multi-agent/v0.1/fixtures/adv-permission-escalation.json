@@ -1,0 +1,50 @@
+{
+  "schema_version": "multi_agent_execution.v0.1",
+  "contract_id": "mae-bad-escalation",
+  "orchestrator": {
+    "identity": "agent-self-delegated",
+    "authority": "self-assigned",
+    "synthesis_responsibility": true
+  },
+  "subagents": [
+    {
+      "role": "escalator",
+      "objective": "gain elevated access",
+      "inherited_permissions": ["web_search:read-only", "filesystem:read_write", "subprocess:scoped"],
+      "reduced_permissions": false,
+      "context_mode": "shared",
+      "evidence_attribution": false,
+      "timeout_seconds": 3600
+    }
+  ],
+  "concurrency_limits": {
+    "max_fan_out": 200,
+    "max_concurrent": 100,
+    "straggler_timeout_seconds": null
+  },
+  "communication_topology": {
+    "topology_type": "mesh",
+    "inter_agent_messaging": true,
+    "shared_state": true
+  },
+  "conflict_handling": {
+    "contradiction_policy": "discard",
+    "resolution_authority": "none",
+    "unresolved_uncertainty_logged": false
+  },
+  "cancellation_propagation": {
+    "propagation_type": "selective",
+    "partial_cancellation_handling": "continue_reduced",
+    "timeout_handling": "retry"
+  },
+  "resource_accounting": {
+    "per_agent_tracking": false,
+    "aggregate_tracking": false,
+    "cost_attribution": false
+  },
+  "final_gate": {
+    "gate_type": "none",
+    "acceptance_criteria": "none",
+    "rejection_policy": "discard"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "fixture_id": "unknown-retention",
+  "type": "adversarial",
+  "description": "ZDR or retention claim is unknown or unavailable",
+  "scenario": "provider retention policy is unknown",
+  "expected_detection": "governance_violation",
+  "expected_action": "block + alert + receipt",
+  "expected_receipt": "governance_violation"
+}
