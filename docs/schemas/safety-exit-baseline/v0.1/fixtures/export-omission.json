@@ -1,0 +1,10 @@
+{
+  "fixture_id": "export-omission",
+  "type": "negative_test",
+  "description": "Runtime export omits memory, receipts, or workflow definitions without disclosure",
+  "runtime_report": {"artifacts": {"export_verified": true, "user_controlled_formats": ["prompts", "workflows", "memory", "receipts"]}},
+  "actual_state": {"artifacts": {"exported": ["prompts"], "omitted": ["memory", "receipts", "workflows"], "disclosed": false}},
+  "expected_detection": "export_omission",
+  "expected_action": "fail_validation + alert",
+  "expected_receipt": "portability_violation"
+}

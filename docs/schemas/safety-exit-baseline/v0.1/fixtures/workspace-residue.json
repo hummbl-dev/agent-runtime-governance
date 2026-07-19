@@ -1,0 +1,10 @@
+{
+  "fixture_id": "workspace-residue",
+  "type": "negative_test",
+  "description": "Persistent workspace residue after reset/uninstall",
+  "runtime_report": {"isolation": {"workspace_type": "ephemeral", "reset_verified": true}},
+  "actual_state": {"isolation": {"residue": ["/tmp/agent-session-001/secrets.env", "/workspace/.cache"]}},
+  "expected_detection": "workspace_residue_after_reset",
+  "expected_action": "fail_validation + alert + manual_cleanup",
+  "expected_receipt": "safety_violation"
+}

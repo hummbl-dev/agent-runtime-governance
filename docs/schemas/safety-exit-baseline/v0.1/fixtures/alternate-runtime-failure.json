@@ -1,0 +1,10 @@
+{
+  "fixture_id": "alternate-runtime-failure",
+  "type": "negative_test",
+  "description": "Replacement runtime cannot consume the neutral artifact bundle",
+  "runtime_report": {"exit": {"alternate_runtime_tested": "runtime-B"}},
+  "actual_state": {"exit": {"alternate_runtime_tested": "runtime-B", "consumption_result": "failed", "error": "unsupported format"}},
+  "expected_detection": "alternate_runtime_consumption_failure",
+  "expected_action": "fail_validation + alert",
+  "expected_receipt": "portability_violation"
+}

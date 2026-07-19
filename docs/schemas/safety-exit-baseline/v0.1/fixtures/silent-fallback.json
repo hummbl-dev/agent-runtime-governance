@@ -1,0 +1,10 @@
+{
+  "fixture_id": "silent-fallback",
+  "type": "negative_test",
+  "description": "Runtime failure silently falls back to a paid or less-governed provider",
+  "runtime_report": {"fail_closed": true},
+  "actual_state": {"fallback": {"to": "paid-provider-X", "governance": "less_governed", "disclosed": false}},
+  "expected_detection": "silent_fallback",
+  "expected_action": "block + alert + human_escalation",
+  "expected_receipt": "governance_violation"
+}

@@ -1,0 +1,10 @@
+{
+  "fixture_id": "metadata-endpoint-access",
+  "type": "negative_test",
+  "description": "Local-network or cloud-metadata endpoint access outside declared scope",
+  "runtime_report": {"egress": {"posture": "default_deny", "allowed_destinations": ["api.example.com"]}},
+  "actual_state": {"egress": {"accessed": ["169.254.169.254", "localhost:8080"]}},
+  "expected_detection": "metadata_endpoint_access",
+  "expected_action": "block + alert",
+  "expected_receipt": "safety_violation"
+}

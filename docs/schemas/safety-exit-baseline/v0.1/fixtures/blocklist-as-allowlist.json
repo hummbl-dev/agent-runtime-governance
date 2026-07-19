@@ -1,0 +1,10 @@
+{
+  "fixture_id": "blocklist-as-allowlist",
+  "type": "negative_test",
+  "description": "Blocklist-only policy misclassified as allowlist/default-deny",
+  "runtime_report": {"egress": {"posture": "default_deny", "allowed_destinations": ["api.example.com"]}},
+  "actual_state": {"egress": {"posture": "blocklist", "blocked_destinations": ["malicious.com"]}},
+  "expected_detection": "egress_posture_misclassified",
+  "expected_action": "fail_validation + alert",
+  "expected_receipt": "safety_violation"
+}
